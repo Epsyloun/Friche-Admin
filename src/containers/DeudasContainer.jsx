@@ -47,6 +47,7 @@ function DeudasContainer() {
       <EditOrDeleteDeuda
         collectionName={collectionName}
         deudaId={deudaId}
+        setDeudaId={setDeudaId}
         openEoD={openEoD}
         setOpen={setOpen}
         setOpenEoD={setOpenEoD}

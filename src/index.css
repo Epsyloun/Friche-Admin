@@ -202,3 +202,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/*subiendo index para que se muestre sobre modals*/
+.swal2-container {
+  z-index: 10000 !important;
+}

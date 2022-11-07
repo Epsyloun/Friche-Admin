@@ -8,7 +8,9 @@ import {
   Typography,
 } from "@mui/material";
 import React, {useState} from "react";
+import Swal from "sweetalert2";
 import {saveNewRegister} from '../../firebase/api'
+import { useTheme } from '@mui/material/styles';
 
 //Componente modal de new Cobro
 function NewCobro({collectionName, open, setOpen, openEoD, setOpenEoD}) {
@@ -24,6 +26,9 @@ function NewCobro({collectionName, open, setOpen, openEoD, setOpenEoD}) {
     boxShadow: 24,
     p: 4,
   };
+
+  //Inicializando el tema de colores de la app
+  const theme = useTheme();
 
   //Funcion para obtener la fecha actual
   let fecha = new Date();
@@ -59,9 +64,19 @@ function NewCobro({collectionName, open, setOpen, openEoD, setOpenEoD}) {
   async function handleSubmit(e) {
     e.preventDefault();
     await saveNewRegister(collectionName,addCobro);
-    console.log('new task added');//TODO: añadir alert de que se agrego y luego cerrar el modal con then
-    setAddCobro(initialState)
-    handleClose();
+    Swal.fire({
+      title:'Cobro añadido',
+      icon:'success',
+      text:'Nuevo cobro añadido',
+      timer: 2000,
+      iconColor: theme.palette.text.icon,
+      color:theme.palette.text.accent,
+      background: theme.palette.background.paper,
+    }
+    ).then(
+      setAddCobro(initialState),
+      handleClose()
+    )
   }
 
   return (

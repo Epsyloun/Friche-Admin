@@ -8,10 +8,12 @@ import {
   Typography,
 } from "@mui/material";
 import React, {useState, useEffect} from "react";
-import {deleteRegister, updateRegister, getOneRegister} from '../../firebase/api'
+import {deleteRegister, updateRegister, getOneRegister} from '../../firebase/api';
+import Swal from "sweetalert2";
+import { useTheme } from '@mui/material/styles';
 
 //Componente del modal de editar o eliminar
-function EditOrDeleteDeuda({collectionName,deudaId, openEoD, setOpenEoD, setOpen}) {
+function EditOrDeleteDeuda({collectionName,deudaId,setDeudaId, openEoD, setOpenEoD, setOpen}) {
 
   //StyleComponent
   const style = {
@@ -27,6 +29,9 @@ function EditOrDeleteDeuda({collectionName,deudaId, openEoD, setOpenEoD, setOpen
     p: 4,
   };
 
+  //Inicializando el tema de colores de la app
+  const theme = useTheme();
+
   //Funcion para obtener la fecha de hoy
   let fechaVar = new Date();
   let diaf = fechaVar.getDate();
@@ -39,6 +44,7 @@ function EditOrDeleteDeuda({collectionName,deudaId, openEoD, setOpenEoD, setOpen
     setOpen(false);
     setOpenEoD(false);
     setEditOrDeleteCobro(initialState)//Limpiando los textfields al cerrar el modal
+    setDeudaId(0)
   }
 
   //Maneja los cambios en los textfields
@@ -83,11 +89,37 @@ function EditOrDeleteDeuda({collectionName,deudaId, openEoD, setOpenEoD, setOpen
   const [editOrDeleteCobro, setEditOrDeleteCobro] = useState(initialState);
 
   //Funcion para eliminar
-  async function EliminarCobro(){
+  async function eliminarCobro(){
     const docSnap = await getOneRegister(collectionName,deudaId);
 
     if (docSnap.exists()) {
-      deleteRegister(collectionName,deudaId)
+      Swal.fire({
+        title:'Eliminar este cobro',
+        icon:'warning',
+        text:'¿Seguro que quieres eliminar este cobro?',
+        iconColor: theme.palette.text.icon,
+        color:theme.palette.text.accent,
+        background: theme.palette.background.paper,
+        showCancelButton: true,
+        confirmButtonColor: theme.palette.secondary.main,
+        cancelButtonColor: theme.palette.background.background,
+        confirmButtonText: 'Sí, eliminarlo',
+        cancelButtonText: 'Cancelar',
+      }).then((result) => {
+        if(result.isConfirmed){
+          deleteRegister(collectionName,deudaId);
+          handleClose()
+          Swal.fire({
+            title:'Cobro eliminado',
+            icon:'success',
+            text:'El cobro fue eliminado',
+            timer: 2000,
+            iconColor: theme.palette.text.icon,
+            color:theme.palette.text.accent,
+            background: theme.palette.background.paper,
+          })
+        }
+      });
     } else {
       console.log("No such document!");
     }
@@ -95,7 +127,7 @@ function EditOrDeleteDeuda({collectionName,deudaId, openEoD, setOpenEoD, setOpen
 
 
   //Funcion para editar
-  async function handleEdit(e) {
+  async function modificarCobro(e) {theme
     e.preventDefault();
 
     //Se actualiza la fecha
@@ -106,7 +138,35 @@ function EditOrDeleteDeuda({collectionName,deudaId, openEoD, setOpenEoD, setOpen
     const docSnap = await getOneRegister(collectionName,deudaId);
 
     if (docSnap.exists()) {
-      updateRegister(collectionName,deudaId, arreglo)
+
+      Swal.fire({
+        title:'Guardar cambios',
+        icon:'info',
+        text:'¿Quieres guardar los cambios?',
+        iconColor: theme.palette.text.icon,
+        color:theme.palette.text.accent,
+        background: theme.palette.background.paper,
+        showCancelButton: true,
+        confirmButtonColor: theme.palette.secondary.main,
+        cancelButtonColor: theme.palette.background.background,
+        confirmButtonText: 'Guardar',
+        cancelButtonText: 'Cancelar',
+      }).then((result) => {
+        if(result.isConfirmed){
+          updateRegister(collectionName,deudaId, arreglo);
+          handleClose()
+          Swal.fire({
+            title:'Cobro actualizado',
+            icon:'success',
+            text:'El cobro fue actualizado',
+            timer: 2000,
+            iconColor: theme.palette.text.icon,
+            color:theme.palette.text.accent,
+            background: theme.palette.background.paper,
+          })
+        }
+      });
+
     } else {
       console.log("No such document!");
     }
@@ -127,7 +187,7 @@ function EditOrDeleteDeuda({collectionName,deudaId, openEoD, setOpenEoD, setOpen
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-        <form onSubmit={handleEdit}>
+        <form onSubmit={modificarCobro}>
           <Box sx={style}>
             <Typography align="center" variant="h3" component="h3">
               Ver más
@@ -196,7 +256,7 @@ function EditOrDeleteDeuda({collectionName,deudaId, openEoD, setOpenEoD, setOpen
               </Grid>
               <Grid item md={12} xs={12}></Grid>
               <Grid item align="left" md={4} xs={6}>
-                <Button onClick={EliminarCobro} variant="outlined">Eliminar</Button>
+                <Button onClick={eliminarCobro} variant="outlined">Eliminar</Button>
               </Grid>
               <Grid item align="right" md={4} xs={6}>
                 <Button type="submit" variant="contained">Guardar</Button>
