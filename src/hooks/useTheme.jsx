@@ -60,7 +60,8 @@ function useThemeHook() {
                     },
                     text:{
                         accent:'hotpink',
-                        avatar:'#b74d62'
+                        avatar:'#b74d62',
+                        icon:'#FA11F2'
                     },
                     background:{
                         paper:'#270c35',

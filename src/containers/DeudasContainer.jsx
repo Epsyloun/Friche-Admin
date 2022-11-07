@@ -6,6 +6,10 @@ import { Title } from "../components/GenericComponents/Title";
 import { NewCobro } from "../components/DeudasComponents/NewCobro";
 
 function DeudasContainer() {
+
+  //Nombre de coleccion
+  const collectionName = "cobros"
+
   //Manejo de variables de Edit or Delete
   const [deudaId, setDeudaId] = useState(0);
 
@@ -16,14 +20,18 @@ function DeudasContainer() {
 
   return (
     <>
+      {/* Componente titulo */}
       <Title titleText="Cobros" />
+      {/* Componente buscador*/}
       <Buscador
         setSearch={setSearchCobro}
         open={open}
         setOpen={setOpen}
         setOpenEoD={setOpenEoD}
       />
+      {/* Componente donde se enlistan las deudas*/}
       <ListDeuda
+        collectionName={collectionName}
         setDeudaId={setDeudaId}
 
         searchValue={searchCobro}
@@ -32,9 +40,14 @@ function DeudasContainer() {
         openEoD={openEoD}
         setOpenEoD={setOpenEoD}
       />
-      <NewCobro open={open} setOpen={setOpen} setOpenEoD={setOpenEoD} />
+      {/* Componente modal new deuda*/}
+      <NewCobro collectionName={collectionName} open={open} setOpen={setOpen} setOpenEoD={setOpenEoD} />
+
+      {/* Componente modal edit delete deduda*/}
       <EditOrDeleteDeuda
+        collectionName={collectionName}
         deudaId={deudaId}
+        setDeudaId={setDeudaId}
         openEoD={openEoD}
         setOpen={setOpen}
         setOpenEoD={setOpenEoD}
@@ -43,4 +56,5 @@ function DeudasContainer() {
   );
 }
 
+//Exportamos el componente
 export { DeudasContainer };

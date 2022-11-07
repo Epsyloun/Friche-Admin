@@ -8,9 +8,12 @@ import {
   Typography,
 } from "@mui/material";
 import React, {useState} from "react";
-import {saveCobros} from '../../firebase/api'
+import Swal from "sweetalert2";
+import {saveNewRegister} from '../../firebase/api'
+import { useTheme } from '@mui/material/styles';
 
-function NewCobro({ open, setOpen, openEoD, setOpenEoD}) {
+//Componente modal de new Cobro
+function NewCobro({collectionName, open, setOpen, openEoD, setOpenEoD}) {
   const style = {
     position: "absolute",
     top: "50%",
@@ -24,19 +27,23 @@ function NewCobro({ open, setOpen, openEoD, setOpenEoD}) {
     p: 4,
   };
 
+  //Inicializando el tema de colores de la app
+  const theme = useTheme();
+
+  //Funcion para obtener la fecha actual
   let fecha = new Date();
   let diaf = fecha.getDate();
   let mes = fecha.getMonth();
   mes = mes + 1;
   let ano = fecha.getFullYear();
 
-
+  //Funcion para cerrar el modal
   function handleClose() {
     setOpen(false);
     setOpenEoD(false);
   }
 
-  //Funcion para guardar un nuevo cobro
+  //Datos iniciales para guardar un nuevo cobro
   const initialState = {
     nombre:'',
     apellido:'',
@@ -45,19 +52,31 @@ function NewCobro({ open, setOpen, openEoD, setOpenEoD}) {
     monto:''
   }
 
-  const [addCobro, setAddCobro] = useState(initialState);
+  const [addCobro, setAddCobro] = useState(initialState);//state del nuevo cobro
 
+  //Manejar los datos de los textfields
   const handleInputChange = (e) =>{
     const {name, value} = e.target;
     setAddCobro({...addCobro, [name]:value})
   }
 
+  //Funcion para manejar el submit al guardar un nuevo registro
   async function handleSubmit(e) {
     e.preventDefault();
-    await saveCobros(addCobro);
-    console.log('new task added');//TODO: añadir alert de que se agrego y luego cerrar el modal con then
-    setAddCobro(initialState)
-    handleClose();
+    await saveNewRegister(collectionName,addCobro);
+    Swal.fire({
+      title:'Cobro añadido',
+      icon:'success',
+      text:'Nuevo cobro añadido',
+      timer: 2000,
+      iconColor: theme.palette.text.icon,
+      color:theme.palette.text.accent,
+      background: theme.palette.background.paper,
+    }
+    ).then(
+      setAddCobro(initialState),
+      handleClose()
+    )
   }
 
   return (
@@ -152,4 +171,5 @@ function NewCobro({ open, setOpen, openEoD, setOpenEoD}) {
   );
 }
 
+//Exportamos el componente
 export { NewCobro };

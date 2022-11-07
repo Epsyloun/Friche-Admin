@@ -20,20 +20,28 @@ const StyledCard = {
     borderColor: "secondary.main",
   },
 };
-
 const StyledText = { color: "text.avatar" };
-
 const StyledCardContent = { padding: "5%", flex: "1 1 auto" };
-
 const StyledAvatar = { backgroundColor: "text.avatar", color: "white" };
 
-function CardDeuda({deudaId, setDeudaId, setOpenEoD,setOpen, initial, title, info, subtitle }) {
+//Componente card que se muestra en la lista de deudas
+function CardDeuda({
+  deudaId,
+  setDeudaId,
+  setOpenEoD,
+  setOpen,
+  initial,
+  title,
+  info,
+  subtitle,
+}) {
   //Funcion para mostrar que se clickea la card
   function showOptions() {
-    setDeudaId(deudaId)
-    setOpen(false);
-    setOpenEoD(true);
+    setDeudaId(deudaId); //Enviamos el id al abrir el modal
+    setOpen(false); //Cerramos el modal de new
+    setOpenEoD(true); //Abrimos el modal de edit or delete
   }
+
   return (
     <Card sx={StyledCard}>
       <CardActionArea onClick={showOptions} sx={StyledText}>
@@ -72,4 +80,5 @@ function CardDeuda({deudaId, setDeudaId, setOpenEoD,setOpen, initial, title, inf
   );
 }
 
+//Exportamos el componente
 export { CardDeuda };
