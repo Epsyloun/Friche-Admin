@@ -3,6 +3,7 @@ import {Button, Grid, InputAdornment, TextField } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from '@mui/icons-material/Search';
 
+//Componente del buscador
 function Buscador({ setOpenEoD,setOpen, search, setSearch }) {
   //Styled Components
   const StyledPaper = {
@@ -12,10 +13,12 @@ function Buscador({ setOpenEoD,setOpen, search, setSearch }) {
     backgroundColor: "background.default",
   };
 
+  //Funcion para manejar el input en el buscador
   function handleChange(e) {
     setSearch(e.target.value);
   }
 
+  //Funcion para manejar el modal
   function handleOpen() {
     setOpen(true);
     setOpenEoD(false);
@@ -56,4 +59,5 @@ function Buscador({ setOpenEoD,setOpen, search, setSearch }) {
   );
 }
 
+//Exportamos el componente
 export { Buscador };

@@ -8,23 +8,27 @@ import {
   getDoc,
   getDocs,
 } from "firebase/firestore";
-import { db } from "./config";
+import { db } from "./config"; //Importamos el archivo de config de la DB
 
-const collectionName = "cobros";
-
-export const saveCobros = (newLink) =>
+//Funcion para guardar un nuevo registro
+export const saveNewRegister = (collectionName, newLink) =>
   addDoc(collection(db, collectionName), newLink);
 
-export const updateCobros = (id, updatedFields) =>
+//Funcion para modificar un nuevo registro
+export const updateRegister = (collectionName, id, updatedFields) =>
   updateDoc(doc(db, collectionName, id), updatedFields);
 
-export const onGetCorreos = (callback) => {
+//Funcion para obtener un solo registro de una collection
+export const onGetCorreos = (collectionName, callback) => {
   const unsub = onSnapshot(collection(db, collectionName), callback);
   return unsub;
 };
 
-export const getCobros = (callback) => onSnapshot(collection(db, collectionName), callback);
+//Funcion para obtener todos los registros de una collection
+export const getRegisters = (collectionName, callback) => onSnapshot(collection(db, collectionName), callback);
 
-export const deleteCobros = (id) => deleteDoc(doc(db, collectionName, id));
+//Funcion para eliminar un registro de una collection
+export const deleteRegister = (collectionName, id) => deleteDoc(doc(db, collectionName, id));
 
-export const getCobro = (id) => getDoc(doc(db, collectionName, id));
+//Funcion para obtener un registro de una collection
+export const getOneRegister = (collectionName, id) => getDoc(doc(db, collectionName, id));

@@ -8,10 +8,10 @@ import {
   Typography,
 } from "@mui/material";
 import React, {useState, useEffect} from "react";
-import {deleteCobros, saveCobros, updateCobros} from '../../firebase/api'
-import {getCobro} from '../../firebase/api'
+import {deleteRegister, updateRegister, getOneRegister} from '../../firebase/api'
 
-function EditOrDeleteDeuda({deudaId, openEoD, setOpenEoD, setOpen}) {
+//Componente del modal de editar o eliminar
+function EditOrDeleteDeuda({collectionName,deudaId, openEoD, setOpenEoD, setOpen}) {
 
   //StyleComponent
   const style = {
@@ -34,10 +34,11 @@ function EditOrDeleteDeuda({deudaId, openEoD, setOpenEoD, setOpen}) {
   mes = mes + 1;
   let ano = fechaVar.getFullYear();
 
-  //Funcion para cerrar el modal
+  //Funcion para cerrar los modal
   function handleClose() {
     setOpen(false);
     setOpenEoD(false);
+    setEditOrDeleteCobro(initialState)//Limpiando los textfields al cerrar el modal
   }
 
   //Maneja los cambios en los textfields
@@ -52,9 +53,11 @@ function EditOrDeleteDeuda({deudaId, openEoD, setOpenEoD, setOpen}) {
     if(deudaId === 0){
       return
     }
-    const docSnap = await getCobro(deudaId);
+
+    const docSnap = await getOneRegister(collectionName,deudaId);
 
     if (docSnap.exists()) {
+      //Almacenando info de un solo registro
       setEditOrDeleteCobro(docSnap.data())
     } else {
       //mensaje de error al no encontrar
@@ -62,28 +65,29 @@ function EditOrDeleteDeuda({deudaId, openEoD, setOpenEoD, setOpen}) {
     }
   }
 
-  //Duncion para obtener mas informacion de una sola deunda
+  //Funcion para obtener mas informacion de una sola deuda cuando cambie el id
   useEffect(()=>{
     getDeuda();
   },[deudaId])
 
-  //Datos iniciales
+  //Datos para limpiar los textfields
   const initialState = {
-    nombre:' ',
-    apellido:' ',
-    correo:' ',
-    fecha:' ',
-    monto:' '
+    nombre:'',
+    apellido:'',
+    correo:'',
+    fecha:'',
+    monto:''
   }
 
+  //state para la info que se muestra en los textfields
   const [editOrDeleteCobro, setEditOrDeleteCobro] = useState(initialState);
 
   //Funcion para eliminar
   async function EliminarCobro(){
-    const docSnap = await getCobro(deudaId);
+    const docSnap = await getOneRegister(collectionName,deudaId);
 
     if (docSnap.exists()) {
-      deleteCobros(deudaId)
+      deleteRegister(collectionName,deudaId)
     } else {
       console.log("No such document!");
     }
@@ -94,13 +98,15 @@ function EditOrDeleteDeuda({deudaId, openEoD, setOpenEoD, setOpen}) {
   async function handleEdit(e) {
     e.preventDefault();
 
+    //Se actualiza la fecha
     const arreglo = {...editOrDeleteCobro, 'fecha':`${diaf}/${mes}/${ano}`}
 
+    //Se almacena el objeto con la fecha actualizada
     setEditOrDeleteCobro(arreglo)
-    const docSnap = await getCobro(deudaId);
+    const docSnap = await getOneRegister(collectionName,deudaId);
 
     if (docSnap.exists()) {
-      updateCobros(deudaId, arreglo)
+      updateRegister(collectionName,deudaId, arreglo)
     } else {
       console.log("No such document!");
     }
@@ -203,4 +209,5 @@ function EditOrDeleteDeuda({deudaId, openEoD, setOpenEoD, setOpen}) {
   );
 }
 
+//Se expota el componente
 export { EditOrDeleteDeuda };
