@@ -1,32 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
-import { useTheme } from '@mui/material/styles';
 import { InventarioCard } from './InventarioCard';
 import { Grid } from '@mui/material';
 
-function TabsInventario({data}) {
-  const theme = useTheme();
-  const [value, setValue] = React.useState(0);
+function TabsInventario({data, setOpen}) {
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+  useEffect(()=>{
+    setOpen(false);
+  },[])
 
-  const handleChangeIndex = (index) => {
-    setValue(index);
-  };
   return (
-    <Grid container spacing={2} sx={{justifyContent:'center'}}>
-    {data.map((index)=>(
-      <Grid item key={index.id}>
-        <InventarioCard
-          title={data[index.id].nombre}
-          img={data[index.id].img}
-          precio={data[index.id].precio}
-          cantidad={data[index.id].cantidad}
-        />
-    </Grid>
-    ))}
+    <Grid container  mt={1} sx={{justifyContent:'center'}}>
+      <Grid container spacing={2} lg={10} md={10} xs={12} sx={{justifyContent:'center'}}>
+      {data.map((producto)=>(
+        <Grid xs={6} md={3} lg={3} item key={producto.id}>
+          <InventarioCard
+            title={producto.nombre}
+            precio={producto.precio}
+            cantidad={producto.cantidad}
+          />
+      </Grid>
+      ))}
+      </Grid>
     </Grid>
   );
 }
