@@ -12,6 +12,7 @@ import { Buscador } from "../GenericComponents/Buscador";
 import { NewInventario } from "./NewInventario";
 import { getRegisters } from "../../firebase/api";
 import { LoaderInventario } from "../GenericComponents/Skeletons";
+import { EditOrDeleteInventario } from "./EditOrDeleteInventario";
 
 
 //Componente del panel de cada Tab
@@ -181,6 +182,8 @@ function ListInventario({collectionName}) {
     setValue(index);
   };
 
+  //Manejo de variables de Edit or Delete
+  const [productoId, setProductoId] = useState(0);
   //State para los modals
   const [openNew, setOpenNew] = useState(false);
   const [openEoD, setOpenEoD] = useState(false);
@@ -231,22 +234,30 @@ function ListInventario({collectionName}) {
         >
           <TabPanel value={value} index={0} dir={theme.direction}>
             <Buscador search={searchSalados} setSearch={setSearchSalados} setOpen={setOpenNew} />
-            <TabsInventario data={salado} setOpen={setOpenNew} />
+            <TabsInventario setProductoId={setProductoId} data={salado} setOpen={setOpenNew} setOpenEoD={setOpenEoD} />
             <NewInventario collectionName={collectionName} open={openNew} setOpen={setOpenNew} categoria={"Salado"} categoriaIndex={categoriaIndex} setCategoriaIndex={setCategoriaIndex} />
           </TabPanel>
 
           <TabPanel value={value} index={1} dir={theme.direction}>
             <Buscador search={searchDulces} setSearch={setSearchDulces} setOpen={setOpenNew} />
-            <TabsInventario data={dulce} setOpen={setOpenNew} />
+            <TabsInventario setProductoId={setProductoId} data={dulce} setOpen={setOpenNew} setOpenEoD={setOpenEoD} />
             <NewInventario collectionName={collectionName} open={openNew} setOpen={setOpenNew} categoria={"Dulce"} categoriaIndex={categoriaIndex} setCategoriaIndex={setCategoriaIndex} />
           </TabPanel>
           <TabPanel value={value} index={2} dir={theme.direction}>
             <Buscador search={searchPicantes} setSearch={setSearchPicantes} setOpen={setOpenNew} />
-            <TabsInventario data={picante} setOpen={setOpenNew} />
+            <TabsInventario setProductoId={setProductoId} data={picante} setOpen={setOpenNew} setOpenEoD={setOpenEoD}/>
             <NewInventario collectionName={collectionName} open={openNew} setOpen={setOpenNew} categoria={"Picante"} categoriaIndex={categoriaIndex} setCategoriaIndex={setCategoriaIndex} />
           </TabPanel>
         </SwipeableViews>
         )}
+        <EditOrDeleteInventario
+        collectionName={collectionName}
+        productoId={productoId}
+        setProductoId={setProductoId}
+        openEoD={openEoD}
+        setOpenNew={setOpenNew}
+        setOpenEoD={setOpenEoD}
+        />
       </Box>
     </>
   );

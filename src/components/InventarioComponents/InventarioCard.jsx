@@ -38,11 +38,14 @@ const StyleTypography = {
   whiteSpace: "nowrap"
 }
 
-function InventarioCard({ title, cantidad, precio, img }) {
-  //Handler Options
-  function showOptions() {
-    console.log("click");
-  }
+function InventarioCard({ id, title, cantidad, precio, setOpenEoD, setProductoId}) {
+
+    //Funcion para abrir los modal
+    function openEoD() {
+      setOpenEoD(true);
+      setProductoId(id)
+    }
+
   return (
     <Card sx={StyledCard}>
       <Box sx={StyledBox}>
@@ -94,7 +97,7 @@ function InventarioCard({ title, cantidad, precio, img }) {
           />
         </CardContent>
         <CardActions>
-          <Button color="secondary" variant="outlined" size="medium">
+          <Button onClick={openEoD} color="secondary" variant="outlined" size="medium">
             Actualizar
           </Button>
         </CardActions>
