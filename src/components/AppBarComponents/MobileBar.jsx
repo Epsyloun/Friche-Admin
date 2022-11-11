@@ -9,14 +9,13 @@ import AddIcon from "@mui/icons-material/Add"; //AÑADIR
 import HomeIcon from "@mui/icons-material/Home"; //INICIO
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney"; //DEUDAS
 import BorderColorIcon from "@mui/icons-material/BorderColor"; //PEDIDOS
-import SettingsIcon from "@mui/icons-material/Settings"; //AJUSTES
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { ModalVenta } from "../GenericComponents/ModalVenta";
 
 const VioletButton = {
-  position: "absolute",
+  position: "fixed",
   zIndex: 1,
-  top: -70,
+  bottom: 70,
   left: "75%",
   right: 0,
   margin: "0 auto",
@@ -52,45 +51,51 @@ function MobileBar({ pageIndex, setPageIndex }) {
   const StyledBottom = { width: window.width };
 
   return (
-    <Paper sx={StyledPaper} elevation={3}>
-      <BottomNavigation sx={StyledBottom} value={value} onChange={handleChange}>
-        <ModalVenta open={open} setOpen={setOpen} />
-        <Fab
-          onClick={() => {
-            setOpen(!open);
-          }}
-          sx={VioletButton}
-          color="secondary"
-          aria-label="add"
+    <>
+      <ModalVenta open={open} setOpen={setOpen} />
+      <Fab
+        onClick={() => {
+          setOpen(!open);
+        }}
+        sx={VioletButton}
+        color="secondary"
+        aria-label="add"
+      >
+        <AddIcon />
+      </Fab>
+      <Paper sx={StyledPaper} elevation={3}>
+        <BottomNavigation
+          sx={StyledBottom}
+          value={value}
+          onChange={handleChange}
         >
-          <AddIcon />
-        </Fab>
-        <BottomNavigationAction
-          value="recents"
-          icon={<HomeIcon />}
-          sx={StyledText}
-          onClick={(event) => handlerPageIndex(0)}
-        />
-        <BottomNavigationAction
-          value="deudas"
-          icon={<AttachMoneyIcon />}
-          sx={StyledText}
-          onClick={(event) => handlerPageIndex(1)}
-        />
-        <BottomNavigationAction
-          value="pedidos"
-          icon={<BorderColorIcon />}
-          sx={StyledText}
-          onClick={(event) => handlerPageIndex(2)}
-        />
-        <BottomNavigationAction
-          value="ajustes"
-          icon={<MoreHorizIcon />}
-          sx={StyledText}
-          onClick={(event) => handlerPageIndex(7)}
-        />
-      </BottomNavigation>
-    </Paper>
+          <BottomNavigationAction
+            value="recents"
+            icon={<HomeIcon />}
+            sx={StyledText}
+            onClick={(event) => handlerPageIndex(0)}
+          />
+          <BottomNavigationAction
+            value="deudas"
+            icon={<AttachMoneyIcon />}
+            sx={StyledText}
+            onClick={(event) => handlerPageIndex(1)}
+          />
+          <BottomNavigationAction
+            value="pedidos"
+            icon={<BorderColorIcon />}
+            sx={StyledText}
+            onClick={(event) => handlerPageIndex(2)}
+          />
+          <BottomNavigationAction
+            value="ajustes"
+            icon={<MoreHorizIcon />}
+            sx={StyledText}
+            onClick={(event) => handlerPageIndex(7)}
+          />
+        </BottomNavigation>
+      </Paper>
+    </>
   );
 }
 

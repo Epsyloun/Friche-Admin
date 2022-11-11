@@ -7,7 +7,6 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { PedidosContainer } from "../../containers/PedidosContainer";
 
 function LoaderAjustes() {
   //Styled Components
@@ -685,26 +684,35 @@ function LoaderInventario() {
   const StyleditemGrid = { justifyContent: "center" };
   return (
     <Grid sx={StyledGrid}>
-      <Grid item xs={12}>
-        <Paper>
-          <Skeleton variant="wave" height="3em" />
-        </Paper>
-      </Grid>
+      <Paper>
+        <Grid container spacing={2} pt={3} sx={StyleditemGrid}>
+          <Grid item xs={8}>
+            <Paper>
+              <Skeleton variant="wave" height="3.5em" />
+            </Paper>
+          </Grid>
+          <Grid item xs={2}>
+            <Paper>
+              <Skeleton variant="wave" height="3.5em" />
+            </Paper>
+          </Grid>
+        </Grid>
+      </Paper>
       <Grid item xs={12}>
         <Paper>
           <Container>
             <Grid container spacing={2} pt={3} pb={3} sx={StyleditemGrid}>
               <Grid item xs={12} md={4} lg={3}>
-                <Skeleton variant="wave" height="30em" />
+                <Skeleton variant="wave" height="16em" />
               </Grid>
               <Grid item xs={12} md={4} lg={3}>
-                <Skeleton variant="wave" height="30em" />
+                <Skeleton variant="wave" height="16em" />
               </Grid>
               <Grid item xs={12} md={4} lg={3}>
-                <Skeleton variant="wave" height="30em" />
+                <Skeleton variant="wave" height="16em" />
               </Grid>
               <Grid item xs={12} md={4} lg={3}>
-                <Skeleton variant="wave" height="30em" />
+                <Skeleton variant="wave" height="16em" />
               </Grid>
             </Grid>
           </Container>
