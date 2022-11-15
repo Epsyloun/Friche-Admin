@@ -184,7 +184,7 @@ function EditOrDeleteInventario({collectionName,productoId,setProductoId, openEo
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-        <form onSubmit={modificarProducto}>
+        <form onSubmit={modificarProducto} autoComplete="off">
           <Box sx={style}>
             <Typography align="center" variant="h3" component="h3">
               Ver más

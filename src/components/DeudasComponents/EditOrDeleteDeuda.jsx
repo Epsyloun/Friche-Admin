@@ -187,7 +187,7 @@ function EditOrDeleteDeuda({collectionName,deudaId,setDeudaId, openEoD, setOpenE
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-        <form onSubmit={modificarCobro}>
+        <form onSubmit={modificarCobro} autoComplete="off">
           <Box sx={style}>
             <Typography align="center" variant="h3" component="h3">
               Ver más

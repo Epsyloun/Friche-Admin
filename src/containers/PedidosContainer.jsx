@@ -3,7 +3,6 @@ import { Buscador } from "../components/GenericComponents/Buscador";
 import { TableComponent } from "../components/GenericComponents/Table";
 import { Title } from "../components/GenericComponents/Title";
 import { PedidosArray } from "../components/GenericComponents/infoExamples";
-import { LoaderPedidos } from "../components/GenericComponents/Skeletons";
 import { NewPedido } from "../components/PedidosComponents/NewPedido";
 
 function PedidosContainer() {
@@ -22,26 +21,27 @@ function PedidosContainer() {
     sendRow.push(createData(row.nombre, row.fecha, row.monto));
   });
 
-  const [loader, setLoader] = useState(true);
-  useEffect(() => {
-    setTimeout(() => {
-      setLoader(false);
-    }, 1000);
-  }, [loader]);
-
   const [open, setOpen] = useState(false);
+  const [openEoD, setOpenEoD] = useState(false);
 
   return (
     <>
-      <Title titleText="Pedidos" />
-      {loader && <LoaderPedidos />}
-      {!loader && (
+      {!open && (
         <>
-          <Buscador open={open} setOpen={setOpen}/>
+          <Title titleText="Pedidos" />
+          <Buscador
+            // setSearch={setSearchCobro}
+            open={open}
+            setOpen={setOpen}
+            setOpenEoD={setOpenEoD}
+          />
           <TableComponent columns={columns} rows={sendRow} />
-          <NewPedido open={open} setOpen={setOpen} />
         </>
       )}
+      {open && <>
+        <Title titleText="Agregar nuevo pedido" />
+        <NewPedido/>
+      </>}
     </>
   );
 }

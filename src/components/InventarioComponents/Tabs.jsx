@@ -12,7 +12,7 @@ function TabsInventario({setProductoId,data, setOpen, setOpenEoD}) {
   return (
     <Grid container spacing={2} mt={1} sx={{justifyContent:'center'}}>
         {data.map((producto)=>(
-            <Grid item xs={6} md={3} lg={3} key={producto.id}>
+            <Grid item xs={12} md={3} lg={3} key={producto.id}>
             <InventarioCard
               id={producto.id}
               title={producto.nombre}

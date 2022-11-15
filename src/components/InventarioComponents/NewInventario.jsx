@@ -98,7 +98,7 @@ function NewInventario({collectionName, open, setOpen, categoria, setOpenEoD, ca
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} autoComplete="off">
           <Box sx={style}>
             <Typography align="center" variant="h3" component="h3">
               Nuevo producto
