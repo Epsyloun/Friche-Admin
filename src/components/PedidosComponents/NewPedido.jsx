@@ -1,48 +1,63 @@
-import { Box, Grid, Modal, Typography } from "@mui/material";
-import React from "react";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  Divider,
+  Grid,
+  Modal,
+  Paper,
+  Typography,
+} from "@mui/material";
+import React, { useState, useEffect } from "react";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { AccordionNew } from "./AccordionNew";
+import {DataCliente, DataFecha, DataProductos, DataTotal} from './DataAccordion'
 
-function NewPedido({open, setOpen}) {
-
-  const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: '80%',
-    bgcolor: 'background.paper',
-    color: 'white',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  };
-
-  function handleClose(){
-    setOpen(false)
+function NewPedido() {
+  function handleClose() {
+    setOpen(false);
   }
+
+  const [nombre, setNombre] = useState('');
+  const [cantidad, setCantidad] = useState(0);
+  const [carrito, setCarrito] = useState([]);
+
+  console.log(carrito)
+
   return (
-    <Grid
-      container
-      spacing={2}
-      direction="row"
-      justifyContent="center"
-      alignItems="flex-start"
-    >
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            PEDIDO
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
-        </Box>
-      </Modal>
-    </Grid>
+    <Paper>
+      <form>
+        <AccordionNew
+          title={"Cliente:"}
+          subtitle={nombre}
+          number={1}
+          data={DataCliente(setNombre)}
+          width={'auto'}
+        />
+        <AccordionNew
+          title={"Productos:"}
+          subtitle={cantidad}
+          number={2}
+          data={DataProductos(setCantidad, cantidad, carrito, setCarrito)}
+          width={'auto'}
+        />
+        <AccordionNew
+          title={"Total:"}
+          subtitle={"$10.50"}
+          number={3}
+          data={DataTotal()}
+          width={'auto'}
+        />
+        <AccordionNew
+          title={"Fecha de entrega:"}
+          subtitle={"10/12/1998"}
+          number={4}
+          data={DataFecha()}
+          width={'40%'}
+        />
+      </form>
+    </Paper>
   );
 }
 
