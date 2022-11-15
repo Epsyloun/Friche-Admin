@@ -13,7 +13,7 @@
     "@mui/styles": "^5.9.2",
     "@mui/x-date-pickers": "^5.0.6",
     "babel-loader": "^8.2.5",
-    "chart.js": "^3.8.2",
+    "chart.js": "^3.9.1",
     "dayjs": "^1.11.6",
     "firebase": "^9.13.0",
     "fontsource-roboto": "^4.0.0",

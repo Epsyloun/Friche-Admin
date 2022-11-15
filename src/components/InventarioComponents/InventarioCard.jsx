@@ -5,6 +5,7 @@ import {
   Card,
   CardActions,
   CardContent,
+  Divider,
   TextField,
   Typography,
 } from "@mui/material";
@@ -16,7 +17,13 @@ const StyledCard = {
   alignItems: "center",
   justifyContent: "center",
   borderRadius: "20px",
+  animation: "fade-in ease 0.5s"
 };
+
+const StyleDidiver = {
+    width: '90%',
+    bgcolor: 'background.paper',
+}
 
 const StyledBox = {
   display: "flex",
@@ -60,6 +67,7 @@ function InventarioCard({ id, title, cantidad, precio, setOpenEoD, setProductoId
         >
           {title}
         </Typography>
+        <Divider sx={StyleDidiver} />
         <CardContent>
           <Typography
             component="div"
