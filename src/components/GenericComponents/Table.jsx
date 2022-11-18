@@ -33,14 +33,15 @@ import { styled } from '@mui/material/styles';
     },
   }));
 
-  //Handler table index
-  function handlerTableClick(index){
-    console.log(index);
-  }
+function TableComponent({columns, rows, setPedidoId, setOpenEoD}) {
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-function TableComponent({columns, rows}) {
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  //se obtiene el id del pedido
+  function handlerTableClick(index){
+    setPedidoId(index)
+    setOpenEoD(true)
+  }
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -76,7 +77,7 @@ function TableComponent({columns, rows}) {
                         {columns.map((column) => {
                             const value = row[column.id];
                             return (
-                            <StyledTableCell onClick={() => handlerTableClick(row.nombre)}   key={column.id} align="left">
+                            <StyledTableCell onClick={() => handlerTableClick(row.id)}   key={column.id} align="left">
                                 {column.format && typeof value === 'number' ? column.format(value) : value}
                             </StyledTableCell>
                             );
@@ -97,6 +98,6 @@ function TableComponent({columns, rows}) {
             onRowsPerPageChange={handleChangeRowsPerPage}
             />
         </Paper>
-     );
+    );
 }
 export {TableComponent};

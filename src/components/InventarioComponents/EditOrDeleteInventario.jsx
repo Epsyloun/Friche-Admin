@@ -127,10 +127,10 @@ function EditOrDeleteInventario({collectionName,productoId,setProductoId, openEo
   async function modificarProducto(e) {theme
     e.preventDefault();
 
-    //Se actualiza la fecha
+    //Se actualiza la categoria
     const arreglo = {...editOrDeleteProducto, 'categoria': editOrDeleteProducto.categoria.toString()}
 
-    //Se almacena el objeto con la fecha actualizada
+    //Se almacena el objeto con la categoria actualizada
     setEditOrDeleteProducto(arreglo)
     const docSnap = await getOneRegister(collectionName,productoId);
 
