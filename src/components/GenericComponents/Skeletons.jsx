@@ -806,23 +806,6 @@ function LoaderPedidos() {
 
   return (
     <Grid sx={StyledGrid}>
-      <Grid container spacing={2}>
-        <Grid item md={4} xs={12}>
-          <Stack width={"100%"}>
-            <Skeleton animation="wave" variant="rectangular" height={"3.5em"} />
-          </Stack>
-        </Grid>
-        <Grid item md={6} xs={8}>
-          <Stack width={"100%"}>
-            <Skeleton animation="wave" variant="rectangular" height={"3.5em"} />
-          </Stack>
-        </Grid>
-        <Grid item md={2} xs={4}>
-          <Stack width={"100%"}>
-            <Skeleton animation="wave" variant="rectangular" height={"3.5em"} />
-          </Stack>
-        </Grid>
-      </Grid>
       <Paper>
         <Grid mt={2} container spacing={2}>
           <Grid item xs={12}>
