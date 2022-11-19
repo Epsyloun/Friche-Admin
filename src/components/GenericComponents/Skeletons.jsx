@@ -721,83 +721,6 @@ function LoaderInventario() {
     </Grid>
   );
 }
-function LoaderMobile() {
-  //StyledComponents
-  const StyledGrid = {
-    animation: "fade-in-down ease 0.5s",
-  };
-  const StyledItemGrid = { alignItems: "center" };
-  return (
-    <Grid sx={StyledGrid}>
-      <Paper>
-        <Grid mt={0.2} container spacing={2} sx={StyledItemGrid}>
-          <Grid item xs={3}>
-            <Stack width={"100%"}>
-              <Skeleton animation="wave" variant="circular" height={"4.5em"} />
-            </Stack>
-          </Grid>
-          <Grid item xs={9}>
-            <Stack width={"100%"}>
-              <Skeleton
-                animation="wave"
-                variant="rectangular"
-                height={"3.5em"}
-              />
-            </Stack>
-          </Grid>
-        </Grid>
-        <Grid mt={0.2} container spacing={2} sx={StyledItemGrid}>
-          <Grid item xs={3}>
-            <Stack width={"100%"}>
-              <Skeleton animation="wave" variant="circular" height={"4.5em"} />
-            </Stack>
-          </Grid>
-          <Grid item xs={9}>
-            <Stack width={"100%"}>
-              <Skeleton
-                animation="wave"
-                variant="rectangular"
-                height={"3.5em"}
-              />
-            </Stack>
-          </Grid>
-        </Grid>
-        <Grid mt={0.2} container spacing={2} sx={StyledItemGrid}>
-          <Grid item xs={3}>
-            <Stack width={"100%"}>
-              <Skeleton animation="wave" variant="circular" height={"4.5em"} />
-            </Stack>
-          </Grid>
-          <Grid item xs={9}>
-            <Stack width={"100%"}>
-              <Skeleton
-                animation="wave"
-                variant="rectangular"
-                height={"3.5em"}
-              />
-            </Stack>
-          </Grid>
-        </Grid>
-        <Grid mt={0.2} container spacing={2} sx={StyledItemGrid}>
-          <Grid item xs={3}>
-            <Stack width={"100%"}>
-              <Skeleton animation="wave" variant="circular" height={"4.5em"} />
-            </Stack>
-          </Grid>
-          <Grid item xs={9}>
-            <Stack width={"100%"}>
-              <Skeleton
-                animation="wave"
-                variant="rectangular"
-                height={"3.5em"}
-              />
-            </Stack>
-          </Grid>
-        </Grid>
-      </Paper>
-    </Grid>
-  );
-}
 function LoaderPedidos() {
   //StyledComponents
   const StyledGrid = {
@@ -911,6 +834,5 @@ export {
   LoaderGraficos,
   LoaderHome,
   LoaderInventario,
-  LoaderMobile,
   LoaderPedidos,
 };
