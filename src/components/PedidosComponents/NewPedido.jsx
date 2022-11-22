@@ -23,6 +23,10 @@ import { useNavigate } from "react-router-dom";
 
 function NewPedido({collectionName, setOpen}) {
 
+  const StyledAnimation ={
+    animation: 'fade-in ease 0.5s'
+  }
+
     let navigate = useNavigate();
 
     //Inicializando el tema de colores de la app
@@ -78,7 +82,7 @@ function NewPedido({collectionName, setOpen}) {
   }
 
   return (
-    <Paper>
+    <Paper sx={StyledAnimation}>
       <form onSubmit={addPedido} autoComplete="off">
         <AccordionNew
           title={"Cliente:"}
