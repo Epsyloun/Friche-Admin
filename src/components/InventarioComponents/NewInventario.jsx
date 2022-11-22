@@ -11,9 +11,10 @@ import React, {useState} from "react";
 import Swal from "sweetalert2";
 import {saveNewRegister} from '../../firebase/api'
 import { useTheme } from '@mui/material/styles';
+import { useEffect } from "react";
 
 //Componente modal de new Cobro
-function NewCobro({collectionName, open, setOpen, openEoD, setOpenEoD}) {
+function NewInventario({collectionName, open, setOpen, categoria, setOpenEoD, categoriaIndex, setCategoriaIndex}) {
   const style = {
     position: "absolute",
     top: "50%",
@@ -30,51 +31,55 @@ function NewCobro({collectionName, open, setOpen, openEoD, setOpenEoD}) {
   //Inicializando el tema de colores de la app
   const theme = useTheme();
 
-  //Funcion para obtener la fecha actual
-  let fecha = new Date();
-  let diaf = fecha.getDate();
-  let mes = fecha.getMonth();
-  mes = mes + 1;
-  let ano = fecha.getFullYear();
-
   //Funcion para cerrar el modal
   function handleClose() {
     setOpen(false);
     setOpenEoD(false);
   }
 
+  useEffect(()=>{
+    if(categoria === "Salado"){
+      setCategoriaIndex(1);
+    }else if(categoria === "Dulce"){
+      setCategoriaIndex(2);
+    }else if(categoria === "Picante"){
+      setCategoriaIndex(3);
+    }
+  },[open])
+
   //Datos iniciales para guardar un nuevo cobro
   const initialState = {
     nombre:'',
-    apellido:'',
-    correo:'',
-    fecha:`${diaf}/${mes}/${ano}`,
-    monto:''
+    categoria:'',
+    cantidad:'',
+    precio:''
   }
 
-  const [addCobro, setAddCobro] = useState(initialState);//state del nuevo cobro
+  const [addProducto, setAddProducto] = useState(initialState);//state del nuevo cobro
 
   //Manejar los datos de los textfields
   const handleInputChange = (e) =>{
     const {name, value} = e.target;
-    setAddCobro({...addCobro, [name]:value})
+    setAddProducto({...addProducto, [name]:value})
   }
 
   //Funcion para manejar el submit al guardar un nuevo registro
   async function handleSubmit(e) {
     e.preventDefault();
-    await saveNewRegister(collectionName,addCobro);
+    //Se actualiza la categoria
+    const arreglo = {...addProducto, 'categoria':`${categoriaIndex}`}
+    await saveNewRegister(collectionName,arreglo);
     Swal.fire({
-      title:'Cobro añadido',
+      title:'Producto añadido',
       icon:'success',
-      text:'Nuevo cobro añadido',
+      text:'Nuevo producto añadido',
       timer: 2000,
       iconColor: theme.palette.text.icon,
       color:theme.palette.text.accent,
       background: theme.palette.background.paper,
     }
     ).then(
-      setAddCobro(initialState),
+      setAddProducto(initialState),
       handleClose()
     )
   }
@@ -96,7 +101,10 @@ function NewCobro({collectionName, open, setOpen, openEoD, setOpenEoD}) {
         <form onSubmit={handleSubmit} autoComplete="off">
           <Box sx={style}>
             <Typography align="center" variant="h3" component="h3">
-              Nuevo cobro
+              Nuevo producto
+            </Typography>
+            <Typography align="center" variant="h5" component="h5">
+              "{categoria}"
             </Typography>
             <Grid
               container
@@ -112,47 +120,35 @@ function NewCobro({collectionName, open, setOpen, openEoD, setOpenEoD}) {
                   onChange={handleInputChange}
                   required
                   fullWidth
-                  id="outlined-required"
-                  label="Nombre"
-                  placeholder="Nombre del cliente"
-                  value={addCobro.nombre}
+                  label="Nombre del producto"
+                  placeholder="Nombre del Producto"
+                  value={addProducto.nombre}
                 />
               </Grid>
               <Grid item md={8} xs={12}>
                 <TextField
-                  name="apellido"
+                  name="cantidad"
                   onChange={handleInputChange}
                   required
                   fullWidth
-                  id="outlined-required"
-                  label="Apellido"
-                  placeholder="Apellido del cliente"
-                  value={addCobro.apellido}
-                />
-              </Grid>
-              <Grid item md={8} xs={12}>
-                <TextField
-                  name="correo"
-                  onChange={handleInputChange}
-                  required
-                  fullWidth
-                  id="outlined-required"
-                  label="Correo"
-                  placeholder="Correo del cliente"
-                  value={addCobro.correo}
-                />
-              </Grid>
-              <Grid item md={8} xs={12}>
-                <TextField
-                  name="monto"
-                  onChange={handleInputChange}
-                  required
-                  fullWidth
-                  id="outlined-required"
-                  label="Cobro"
+                  label="Cantidad del producto"
                   type="number"
+                  placeholder="10"
+                  value={addProducto.monto}
+                />
+              </Grid>
+              <Grid item md={8} xs={12}>
+                <TextField
+                  name="precio"
+                  onChange={handleInputChange}
+                  required
+                  fullWidth
+                  label="Precio del producto"
+                  step='any'
+                  min="0.01"
+                  type="string"
                   placeholder="0.00"
-                  value={addCobro.monto}
+                  value={addProducto.monto}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">$</InputAdornment>
@@ -172,4 +168,4 @@ function NewCobro({collectionName, open, setOpen, openEoD, setOpenEoD}) {
 }
 
 //Exportamos el componente
-export { NewCobro };
+export { NewInventario };

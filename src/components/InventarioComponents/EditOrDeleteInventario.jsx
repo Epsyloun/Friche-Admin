@@ -1,9 +1,13 @@
 import {
   Box,
   Button,
+  FormControl,
   Grid,
   InputAdornment,
+  InputLabel,
+  MenuItem,
   Modal,
+  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -13,7 +17,7 @@ import Swal from "sweetalert2";
 import { useTheme } from '@mui/material/styles';
 
 //Componente del modal de editar o eliminar
-function EditOrDeleteDeuda({collectionName,deudaId,setDeudaId, openEoD, setOpenEoD, setOpen}) {
+function EditOrDeleteInventario({collectionName,productoId,setProductoId, openEoD, setOpenEoD, setOpenNew}) {
 
   //StyleComponent
   const style = {
@@ -32,71 +36,64 @@ function EditOrDeleteDeuda({collectionName,deudaId,setDeudaId, openEoD, setOpenE
   //Inicializando el tema de colores de la app
   const theme = useTheme();
 
-  //Funcion para obtener la fecha de hoy
-  let fechaVar = new Date();
-  let diaf = fechaVar.getDate();
-  let mes = fechaVar.getMonth();
-  mes = mes + 1;
-  let ano = fechaVar.getFullYear();
-
   //Funcion para cerrar los modal
   function handleClose() {
-    setOpen(false);
+    setOpenNew(false);
     setOpenEoD(false);
-    setEditOrDeleteCobro(initialState)//Limpiando los textfields al cerrar el modal
-    setDeudaId(0)
+    setEditOrDeleteProducto(initialState)//Limpiando los textfields al cerrar el modal
+    setProductoId(0)
   }
 
   //Maneja los cambios en los textfields
   const handleInputChange = (e) =>{
     const {name, value} = e.target;
-    setEditOrDeleteCobro({...editOrDeleteCobro, [name]:value})
+    setEditOrDeleteProducto({...editOrDeleteProducto, [name]:value})
+    console.log(value);
   }
 
-  //Obteniendo datos de una sola deuda
-  const getDeuda = async () => {
+  //Obteniendo datos de una sola producto
+  const getProducto = async () => {
 
-    if(deudaId === 0){
+    if(productoId === 0){
       return
     }
 
-    const docSnap = await getOneRegister(collectionName,deudaId);
+    const docSnap = await getOneRegister(collectionName,productoId);
 
     if (docSnap.exists()) {
       //Almacenando info de un solo registro
-      setEditOrDeleteCobro(docSnap.data())
+      setEditOrDeleteProducto(docSnap.data())
     } else {
       //mensaje de error al no encontrar
       console.log("No such document!");
     }
   }
 
-  //Funcion para obtener mas informacion de una sola deuda cuando cambie el id
+  //Funcion para obtener mas informacion de una sola produto cuando cambie el id
   useEffect(()=>{
-    getDeuda();
-  },[deudaId])
+    getProducto();
+  },[productoId])
 
   //Datos para limpiar los textfields
   const initialState = {
     nombre:'',
-    apellido:'',
-    correo:'',
-    fecha:'',
-    monto:''
+    categoria:'',
+    cantidad:'',
+    precio:''
   }
 
   //state para la info que se muestra en los textfields
-  const [editOrDeleteCobro, setEditOrDeleteCobro] = useState(initialState);
+  const [editOrDeleteProducto, setEditOrDeleteProducto] = useState(initialState);
 
   //Funcion para eliminar
-  async function eliminarCobro(){
-    const docSnap = await getOneRegister(collectionName,deudaId);
+  async function eliminarProducto(){
+    const docSnap = await getOneRegister(collectionName,productoId);
 
     if (docSnap.exists()) {
       Swal.fire({
-        title:'Eliminar este cobro',
+        title:'Eliminar este producto',
         icon:'warning',
-        text:'¿Seguro que quieres eliminar este cobro?',
+        text:'¿Seguro que quieres eliminar este producto?',
         iconColor: theme.palette.text.icon,
         color:theme.palette.text.accent,
         background: theme.palette.background.paper,
@@ -107,12 +104,12 @@ function EditOrDeleteDeuda({collectionName,deudaId,setDeudaId, openEoD, setOpenE
         cancelButtonText: 'Cancelar',
       }).then((result) => {
         if(result.isConfirmed){
-          deleteRegister(collectionName,deudaId);
+          deleteRegister(collectionName,productoId);
           handleClose()
           Swal.fire({
-            title:'Cobro eliminado',
+            title:'Producto eliminado',
             icon:'success',
-            text:'El cobro fue eliminado',
+            text:'El producto fue eliminado',
             timer: 2000,
             iconColor: theme.palette.text.icon,
             color:theme.palette.text.accent,
@@ -127,15 +124,15 @@ function EditOrDeleteDeuda({collectionName,deudaId,setDeudaId, openEoD, setOpenE
 
 
   //Funcion para editar
-  async function modificarCobro(e) {theme
+  async function modificarProducto(e) {theme
     e.preventDefault();
 
-    //Se actualiza la fecha
-    const arreglo = {...editOrDeleteCobro, 'fecha':`${diaf}/${mes}/${ano}`}
+    //Se actualiza la categoria
+    const arreglo = {...editOrDeleteProducto, 'categoria': editOrDeleteProducto.categoria.toString()}
 
-    //Se almacena el objeto con la fecha actualizada
-    setEditOrDeleteCobro(arreglo)
-    const docSnap = await getOneRegister(collectionName,deudaId);
+    //Se almacena el objeto con la categoria actualizada
+    setEditOrDeleteProducto(arreglo)
+    const docSnap = await getOneRegister(collectionName,productoId);
 
     if (docSnap.exists()) {
 
@@ -153,12 +150,12 @@ function EditOrDeleteDeuda({collectionName,deudaId,setDeudaId, openEoD, setOpenE
         cancelButtonText: 'Cancelar',
       }).then((result) => {
         if(result.isConfirmed){
-          updateRegister(collectionName,deudaId, arreglo);
+          updateRegister(collectionName,productoId, arreglo);
           handleClose()
           Swal.fire({
-            title:'Cobro actualizado',
+            title:'Producto actualizado',
             icon:'success',
-            text:'El cobro fue actualizado',
+            text:'El producto fue actualizado',
             timer: 2000,
             iconColor: theme.palette.text.icon,
             color:theme.palette.text.accent,
@@ -187,7 +184,7 @@ function EditOrDeleteDeuda({collectionName,deudaId,setDeudaId, openEoD, setOpenE
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-        <form onSubmit={modificarCobro} autoComplete="off">
+        <form onSubmit={modificarProducto} autoComplete="off">
           <Box sx={style}>
             <Typography align="center" variant="h3" component="h3">
               Ver más
@@ -209,44 +206,50 @@ function EditOrDeleteDeuda({collectionName,deudaId,setDeudaId, openEoD, setOpenE
                   id="outlined-required"
                   label="Nombre"
                   placeholder="Nombre del cliente"
-                  value={editOrDeleteCobro.nombre}
+                  value={editOrDeleteProducto.nombre}
                 />
               </Grid>
               <Grid item md={8} xs={12}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Categoria</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={editOrDeleteProducto.categoria}
+                  name="categoria"
+                  label="Categoria"
+                  onChange={handleInputChange}
+                >
+                  <MenuItem value={1}>Salados</MenuItem>
+                  <MenuItem value={2}>Dulces</MenuItem>
+                  <MenuItem value={3}>Picantes</MenuItem>
+                </Select>
+              </FormControl>
+              </Grid>
+              <Grid item md={8} xs={12}>
                 <TextField
-                  name="apellido"
+                  name="cantidad"
                   onChange={handleInputChange}
                   required
                   fullWidth
                   id="outlined-required"
-                  label="Apellido"
-                  placeholder="Apellido del cliente"
-                  value={editOrDeleteCobro.apellido}
-                />
-              </Grid>
-              <Grid item md={8} xs={12}>
-                <TextField
-                  name="correo"
-                  onChange={handleInputChange}
-                  required
-                  fullWidth
-                  id="outlined-required"
-                  label="Correo"
-                  placeholder="Correo del cliente"
-                  value={editOrDeleteCobro.correo}
-                />
-              </Grid>
-              <Grid item md={8} xs={12}>
-                <TextField
-                  name="monto"
-                  onChange={handleInputChange}
-                  required
-                  fullWidth
-                  id="outlined-required"
-                  label="Cobro"
+                  label="Cantidad"
                   type="number"
                   placeholder="0.00"
-                  value={editOrDeleteCobro.monto}
+                  value={editOrDeleteProducto.cantidad}
+                />
+              </Grid>
+              <Grid item md={8} xs={12}>
+                <TextField
+                  name="precio"
+                  onChange={handleInputChange}
+                  required
+                  fullWidth
+                  id="outlined-required"
+                  label="Precio"
+                  type="string"
+                  placeholder="0.00"
+                  value={editOrDeleteProducto.precio}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">$</InputAdornment>
@@ -256,7 +259,7 @@ function EditOrDeleteDeuda({collectionName,deudaId,setDeudaId, openEoD, setOpenE
               </Grid>
               <Grid item md={12} xs={12}></Grid>
               <Grid item align="left" md={4} xs={6}>
-                <Button onClick={eliminarCobro} variant="outlined">Eliminar</Button>
+                <Button onClick={eliminarProducto} variant="outlined">Eliminar</Button>
               </Grid>
               <Grid item align="right" md={4} xs={6}>
                 <Button type="submit" variant="contained">Guardar</Button>
@@ -270,4 +273,4 @@ function EditOrDeleteDeuda({collectionName,deudaId,setDeudaId, openEoD, setOpenE
 }
 
 //Se expota el componente
-export { EditOrDeleteDeuda };
+export { EditOrDeleteInventario };

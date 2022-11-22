@@ -4,7 +4,6 @@ import {
   Card,
   CardActionArea,
   CardContent,
-  Divider,
   Stack,
   Typography,
 } from "@mui/material";
@@ -74,7 +73,6 @@ function CardDeuda({
             {subtitle}
           </Typography>
         </CardContent>
-        <Divider />
       </CardActionArea>
     </Card>
   );

@@ -1,76 +1,117 @@
-import React from 'react';
-import { Box, Button, Card, CardActions, CardContent,CardMedia,TextField,Typography } from '@mui/material';
+import React from "react";
+import {
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Divider,
+  TextField,
+  Typography,
+} from "@mui/material";
 
 //Styled Components
 const StyledCard = {
-    display: 'flex',
-    flexDirection:"column",
-    alignItems:"center",
-    justifyContent:'center',
-    borderRadius: '20px',
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  borderRadius: "20px",
+  animation: "fade-in ease 0.5s"
+};
+
+const StyleDidiver = {
+    width: '90%',
+    bgcolor: 'background.paper',
 }
 
 const StyledBox = {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems:'center',
-    width:'100%',
-}
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  width: "100%",
+};
 
 const StyledInput = {
-    textAlign:'center'
+  textAlign: "center",
+};
+
+const StyleTypography = {
+  width:"90%",
+  marginLeft:'20px',
+  marginRight:'20px',
+  textOverflow: "ellipsis",
+  overflow: "hidden",
+  whiteSpace: "nowrap"
 }
 
+function InventarioCard({ id, title, cantidad, precio, setOpenEoD, setProductoId}) {
 
-function InventarioCard({title, cantidad, precio, img}) {
-
-
-    //Handler Options
-    function showOptions(){
-        console.log('click');
+    //Funcion para abrir los modal
+    function openEoD() {
+      setOpenEoD(true);
+      setProductoId(id)
     }
-    return (
-        <Card sx={StyledCard}>
-            <Box sx={StyledBox}>
-                <Typography m="0.3em" component='div' variant="h4" align='center' color="text.primary">
-                    {title}
-                </Typography>
-                <CardMedia
-                    component="img"
-                    height="180"
-                    image={img}
-                    alt="mani"
-                />
-                    <CardContent>
-                        <Typography component='div' variant="h6" align='center' color="text.primary">
-                            Cantidad:
-                        </Typography>
-                        <TextField
-                            inputProps={{style: StyledInput}}
-                            fullWidth
-                            hiddenLabel
-                            defaultValue={cantidad}
-                            variant="filled"
-                            size="small"
-                        />
-                        <Typography component='div' variant="h6" align='center' color="text.primary">
-                            Precio:
-                        </Typography>
-                        <TextField
-                            inputProps={{style: StyledInput}}
-                            fullWidth
-                            hiddenLabel
-                            defaultValue={precio}
-                            variant="filled"
-                            size="small"
-                        />
-                    </CardContent>
-                <CardActions>
-                    <Button color="secondary" variant='outlined' size="medium">Actualizar</Button>
-                </CardActions>
-            </Box>
-        </Card>
-     );
+
+  return (
+    <Card sx={StyledCard}>
+      <Box sx={StyledBox}>
+        <Typography
+          sx={StyleTypography}
+          noWrap
+          mt="0.3em"
+          component="div"
+          variant="h4"
+          align="center"
+          color="text.primary"
+        >
+          {title}
+        </Typography>
+        <Divider sx={StyleDidiver} />
+        <CardContent>
+          <Typography
+            component="div"
+            variant="h6"
+            align="center"
+            color="text.primary"
+          >
+            Cantidad:
+          </Typography>
+          <TextField
+            inputProps={{ style: StyledInput }}
+            fullWidth
+            disabled
+            hiddenLabel
+            value={cantidad}
+            variant="filled"
+            size="small"
+          />
+          <Typography
+            component="div"
+            variant="h6"
+            align="center"
+            color="text.primary"
+          >
+            Precio:
+          </Typography>
+          <TextField
+            inputProps={{ style: StyledInput }}
+            fullWidth
+            disabled
+            hiddenLabel
+            value={precio}
+            variant="filled"
+            size="small"
+          />
+        </CardContent>
+        <CardActions>
+          <Button onClick={openEoD} color="secondary" variant="outlined" size="medium">
+            Actualizar
+          </Button>
+        </CardActions>
+      </Box>
+    </Card>
+  );
 }
 
-export {InventarioCard};
+export { InventarioCard };
