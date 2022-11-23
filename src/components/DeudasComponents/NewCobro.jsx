@@ -52,6 +52,7 @@ function NewCobro({ collectionName, open, setOpen, openEoD, setOpenEoD }) {
     monto: ''
   }
 
+  
   const [addCobro, setAddCobro] = useState(initialState);//state del nuevo cobro
 
   //Manejar los datos de los textfields

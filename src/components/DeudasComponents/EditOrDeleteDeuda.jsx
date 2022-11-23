@@ -85,6 +85,7 @@ function EditOrDeleteDeuda({ collectionName, deudaId, setDeudaId, openEoD, setOp
     monto: ''
   }
 
+  
   //state para la info que se muestra en los textfields
   const [editOrDeleteCobro, setEditOrDeleteCobro] = useState(initialState);
 
@@ -225,9 +226,6 @@ function EditOrDeleteDeuda({ collectionName, deudaId, setDeudaId, openEoD, setOp
       console.log("No such document!");
     }
 
-    const number = 2000;
-number.toLocaleString('en-IN', {style: 'currency',currency: 'INR', minimumFractionDigits: 2})
-console.log(number);
   }
 
   return (
