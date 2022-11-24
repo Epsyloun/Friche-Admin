@@ -7,13 +7,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, {useState, useEffect} from "react";
-import {deleteRegister, updateRegister, getOneRegister} from '../../firebase/api';
+import React, { useState, useEffect } from "react";
+import { deleteRegister, updateRegister, getOneRegister } from '../../firebase/api';
 import Swal from "sweetalert2";
 import { useTheme } from '@mui/material/styles';
 
 //Componente del modal de editar o eliminar
-function EditOrDeleteDeuda({collectionName,deudaId,setDeudaId, openEoD, setOpenEoD, setOpen}) {
+function EditOrDeleteDeuda({ collectionName, deudaId, setDeudaId, openEoD, setOpenEoD, setOpen }) {
 
   //StyleComponent
   const style = {
@@ -48,19 +48,19 @@ function EditOrDeleteDeuda({collectionName,deudaId,setDeudaId, openEoD, setOpenE
   }
 
   //Maneja los cambios en los textfields
-  const handleInputChange = (e) =>{
-    const {name, value} = e.target;
-    setEditOrDeleteCobro({...editOrDeleteCobro, [name]:value})
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditOrDeleteCobro({ ...editOrDeleteCobro, [name]: value })
   }
 
   //Obteniendo datos de una sola deuda
   const getDeuda = async () => {
 
-    if(deudaId === 0){
+    if (deudaId === 0) {
       return
     }
 
-    const docSnap = await getOneRegister(collectionName,deudaId);
+    const docSnap = await getOneRegister(collectionName, deudaId);
 
     if (docSnap.exists()) {
       //Almacenando info de un solo registro
@@ -72,33 +72,34 @@ function EditOrDeleteDeuda({collectionName,deudaId,setDeudaId, openEoD, setOpenE
   }
 
   //Funcion para obtener mas informacion de una sola deuda cuando cambie el id
-  useEffect(()=>{
+  useEffect(() => {
     getDeuda();
-  },[deudaId])
+  }, [deudaId])
 
   //Datos para limpiar los textfields
   const initialState = {
-    nombre:'',
-    apellido:'',
-    correo:'',
-    fecha:'',
-    monto:''
+    nombre: '',
+    apellido: '',
+    correo: '',
+    fecha: '',
+    monto: ''
   }
 
+  
   //state para la info que se muestra en los textfields
   const [editOrDeleteCobro, setEditOrDeleteCobro] = useState(initialState);
 
   //Funcion para eliminar
-  async function eliminarCobro(){
-    const docSnap = await getOneRegister(collectionName,deudaId);
+  async function eliminarCobro() {
+    const docSnap = await getOneRegister(collectionName, deudaId);
 
     if (docSnap.exists()) {
       Swal.fire({
-        title:'Eliminar este cobro',
-        icon:'warning',
-        text:'¿Seguro que quieres eliminar este cobro?',
+        title: 'Eliminar este cobro',
+        icon: 'warning',
+        text: '¿Seguro que quieres eliminar este cobro?',
         iconColor: theme.palette.text.icon,
-        color:theme.palette.text.accent,
+        color: theme.palette.text.accent,
         background: theme.palette.background.paper,
         showCancelButton: true,
         confirmButtonColor: theme.palette.secondary.main,
@@ -106,16 +107,16 @@ function EditOrDeleteDeuda({collectionName,deudaId,setDeudaId, openEoD, setOpenE
         confirmButtonText: 'Sí, eliminarlo',
         cancelButtonText: 'Cancelar',
       }).then((result) => {
-        if(result.isConfirmed){
-          deleteRegister(collectionName,deudaId);
+        if (result.isConfirmed) {
+          deleteRegister(collectionName, deudaId);
           handleClose()
           Swal.fire({
-            title:'Cobro eliminado',
-            icon:'success',
-            text:'El cobro fue eliminado',
+            title: 'Cobro eliminado',
+            icon: 'success',
+            text: 'El cobro fue eliminado',
             timer: 2000,
             iconColor: theme.palette.text.icon,
-            color:theme.palette.text.accent,
+            color: theme.palette.text.accent,
             background: theme.palette.background.paper,
           })
         }
@@ -127,45 +128,99 @@ function EditOrDeleteDeuda({collectionName,deudaId,setDeudaId, openEoD, setOpenE
 
 
   //Funcion para editar
-  async function modificarCobro(e) {theme
+  async function modificarCobro(e) {
+    theme
     e.preventDefault();
 
     //Se actualiza la fecha
-    const arreglo = {...editOrDeleteCobro, 'fecha':`${diaf}/${mes}/${ano}`}
+    const arreglo = { ...editOrDeleteCobro, 'fecha': `${diaf}/${mes}/${ano}` }
 
     //Se almacena el objeto con la fecha actualizada
     setEditOrDeleteCobro(arreglo)
-    const docSnap = await getOneRegister(collectionName,deudaId);
+    const docSnap = await getOneRegister(collectionName, deudaId);
 
     if (docSnap.exists()) {
 
-      Swal.fire({
-        title:'Guardar cambios',
-        icon:'info',
-        text:'¿Quieres guardar los cambios?',
-        iconColor: theme.palette.text.icon,
-        color:theme.palette.text.accent,
-        background: theme.palette.background.paper,
-        showCancelButton: true,
-        confirmButtonColor: theme.palette.secondary.main,
-        cancelButtonColor: theme.palette.background.background,
-        confirmButtonText: 'Guardar',
-        cancelButtonText: 'Cancelar',
-      }).then((result) => {
-        if(result.isConfirmed){
-          updateRegister(collectionName,deudaId, arreglo);
-          handleClose()
+      if (editOrDeleteCobro.nombre.length < 15 && editOrDeleteCobro.apellido.length < 15 && editOrDeleteCobro.correo.length < 25) {
+        if (isNaN(editOrDeleteCobro.nombre) && isNaN(editOrDeleteCobro.apellido)) {
+          if (/^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i.test(editOrDeleteCobro.correo)) {
+            if (editOrDeleteCobro.monto < 1000000) {
+
+              Swal.fire({
+                title: 'Guardar cambios',
+                icon: 'info',
+                text: '¿Quieres guardar los cambios?',
+                iconColor: theme.palette.text.icon,
+                color: theme.palette.text.accent,
+                background: theme.palette.background.paper,
+                showCancelButton: true,
+                confirmButtonColor: theme.palette.secondary.main,
+                cancelButtonColor: theme.palette.background.background,
+                confirmButtonText: 'Guardar',
+                cancelButtonText: 'Cancelar',
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  updateRegister(collectionName, deudaId, arreglo);
+                  handleClose()
+                  Swal.fire({
+                    title: 'Cobro actualizado',
+                    icon: 'success',
+                    text: 'El cobro fue actualizado',
+                    timer: 2000,
+                    iconColor: theme.palette.text.icon,
+                    color: theme.palette.text.accent,
+                    background: theme.palette.background.paper,
+                  })
+                }
+              });
+
+            }
+            else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Ingrese una cantidad meno',
+                timer: 2000,
+                iconColor: theme.palette.text.icon,
+                color: theme.palette.text.accent,
+                background: theme.palette.background.paper,
+              })
+            }
+          }
+          else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Ingrese dirrecion de correo correcto',
+              timer: 2000,
+              iconColor: theme.palette.text.icon,
+              color: theme.palette.text.accent,
+              background: theme.palette.background.paper,
+            })
+          }
+
+        }
+        else {
+
           Swal.fire({
-            title:'Cobro actualizado',
-            icon:'success',
-            text:'El cobro fue actualizado',
+            icon: 'error',
+            title: 'Ingrese nombre correcto',
             timer: 2000,
             iconColor: theme.palette.text.icon,
-            color:theme.palette.text.accent,
+            color: theme.palette.text.accent,
             background: theme.palette.background.paper,
           })
         }
-      });
+      }
+      else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Ingrese menos caracteres',
+          timer: 2000,
+          iconColor: theme.palette.text.icon,
+          color: theme.palette.text.accent,
+          background: theme.palette.background.paper,
+        })
+      }
+
 
     } else {
       console.log("No such document!");
@@ -182,11 +237,11 @@ function EditOrDeleteDeuda({collectionName,deudaId,setDeudaId, openEoD, setOpenE
       alignItems="flex-start"
     >
       <Modal
-          open={openEoD}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
+        open={openEoD}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
         <form onSubmit={modificarCobro} autoComplete="off">
           <Box sx={style}>
             <Typography align="center" variant="h3" component="h3">

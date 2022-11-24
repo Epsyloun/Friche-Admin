@@ -7,13 +7,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Swal from "sweetalert2";
-import {saveNewRegister} from '../../firebase/api'
+import { saveNewRegister } from '../../firebase/api'
 import { useTheme } from '@mui/material/styles';
 
 //Componente modal de new Cobro
-function NewCobro({collectionName, open, setOpen, openEoD, setOpenEoD}) {
+function NewCobro({ collectionName, open, setOpen, openEoD, setOpenEoD }) {
   const style = {
     position: "absolute",
     top: "50%",
@@ -45,38 +45,93 @@ function NewCobro({collectionName, open, setOpen, openEoD, setOpenEoD}) {
 
   //Datos iniciales para guardar un nuevo cobro
   const initialState = {
-    nombre:'',
-    apellido:'',
-    correo:'',
-    fecha:`${diaf}/${mes}/${ano}`,
-    monto:''
+    nombre: '',
+    apellido: '',
+    correo: '',
+    fecha: `${diaf}/${mes}/${ano}`,
+    monto: ''
   }
 
+  
   const [addCobro, setAddCobro] = useState(initialState);//state del nuevo cobro
 
   //Manejar los datos de los textfields
-  const handleInputChange = (e) =>{
-    const {name, value} = e.target;
-    setAddCobro({...addCobro, [name]:value})
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setAddCobro({ ...addCobro, [name]: value })
   }
 
   //Funcion para manejar el submit al guardar un nuevo registro
   async function handleSubmit(e) {
     e.preventDefault();
-    await saveNewRegister(collectionName,addCobro);
-    Swal.fire({
-      title:'Cobro añadido',
-      icon:'success',
-      text:'Nuevo cobro añadido',
-      timer: 2000,
-      iconColor: theme.palette.text.icon,
-      color:theme.palette.text.accent,
-      background: theme.palette.background.paper,
+    //Validar el tamaño de los caracteres
+    if (addCobro.nombre.length < 15 && addCobro.apellido.length < 15 && addCobro.correo.length < 25) {
+      if (isNaN(addCobro.nombre) && isNaN(addCobro.apellido)) {
+        if (/^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i.test(addCobro.correo)) {
+          if (addCobro.monto < 1000000) {
+
+            await saveNewRegister(collectionName, addCobro);
+            Swal.fire({
+              title: 'Cobro añadido',
+              icon: 'success',
+              text: 'Nuevo cobro añadido',
+              timer: 2000,
+              iconColor: theme.palette.text.icon,
+              color: theme.palette.text.accent,
+              background: theme.palette.background.paper,
+            }
+            ).then(
+              setAddCobro(initialState),
+              handleClose()
+            )
+
+          }
+          else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Ingrese una cantidad meno',
+              timer: 2000,
+              iconColor: theme.palette.text.icon,
+              color: theme.palette.text.accent,
+              background: theme.palette.background.paper,
+            })
+          }
+        }
+        else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Ingrese dirrecion de correo correcto',
+            timer: 2000,
+            iconColor: theme.palette.text.icon,
+            color: theme.palette.text.accent,
+            background: theme.palette.background.paper,
+          })
+        }
+
+      }
+      else {
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Ingrese nombre correcto',
+          timer: 2000,
+          iconColor: theme.palette.text.icon,
+          color: theme.palette.text.accent,
+          background: theme.palette.background.paper,
+        })
+      }
     }
-    ).then(
-      setAddCobro(initialState),
-      handleClose()
-    )
+    else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Ingrese menos caracteres',
+        timer: 2000,
+        iconColor: theme.palette.text.icon,
+        color: theme.palette.text.accent,
+        background: theme.palette.background.paper,
+      })
+    }
+
   }
 
   return (
@@ -88,11 +143,11 @@ function NewCobro({collectionName, open, setOpen, openEoD, setOpenEoD}) {
       alignItems="flex-start"
     >
       <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
         <form onSubmit={handleSubmit} autoComplete="off">
           <Box sx={style}>
             <Typography align="center" variant="h3" component="h3">
