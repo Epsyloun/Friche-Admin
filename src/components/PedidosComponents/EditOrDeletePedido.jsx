@@ -13,19 +13,28 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, {useState, useEffect} from "react";
-import {deleteRegister, updateRegister, getOneRegister} from '../../firebase/api';
+import React, { useState, useEffect } from "react";
+import {
+  deleteRegister,
+  updateRegister,
+  getOneRegister,
+} from "../../firebase/api";
 import Swal from "sweetalert2";
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from "@mui/material/styles";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import customParseFormat from 'dayjs/plugin/customParseFormat'
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import { isEmpty } from "@firebase/util";
 
 //Componente del modal de editar o eliminar
-function EditOrDeletePedido({collectionName,pedidoId,setPedidoId, openEoD, setOpenEoD}) {
-
+function EditOrDeletePedido({
+  collectionName,
+  pedidoId,
+  setPedidoId,
+  openEoD,
+  setOpenEoD,
+}) {
   //StyleComponent
   const style = {
     position: "absolute",
@@ -42,18 +51,18 @@ function EditOrDeletePedido({collectionName,pedidoId,setPedidoId, openEoD, setOp
 
   //Datos para limpiar los textfields
   const initialState = {
-    nombre:'',
-    fecha:'',
-    items:{},
-    total:'',
-    estado:''
-  }
+    nombre: "",
+    fecha: "",
+    items: {},
+    total: "",
+    estado: "",
+  };
 
   //state para la info que se muestra en los textfields
   const [editOrDeletePedido, setEditOrDeletePedido] = useState(initialState);
   //State para la info de la fecha
-  dayjs.extend(customParseFormat)
-  let Date = dayjs('01/01/2030', 'DD/MM/YYYY', 'es')
+  dayjs.extend(customParseFormat);
+  let Date = dayjs("01/01/2030", "DD/MM/YYYY", "es");
   const [value, setValue] = useState(Date);
 
   //Inicializando el tema de colores de la app
@@ -62,130 +71,124 @@ function EditOrDeletePedido({collectionName,pedidoId,setPedidoId, openEoD, setOp
   //Funcion para cerrar los modal
   function handleClose() {
     setOpenEoD(false);
-    setEditOrDeletePedido(initialState)//Limpiando los textfields al cerrar el modal
-    setPedidoId(0)
+    setEditOrDeletePedido(initialState); //Limpiando los textfields al cerrar el modal
+    setPedidoId(0);
   }
 
   //Maneja los cambios en los textfields
-  const handleInputChange = (e) =>{
-    const {name, value} = e.target;
-    setEditOrDeletePedido({...editOrDeletePedido, [name]:value})
-  }
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditOrDeletePedido({ ...editOrDeletePedido, [name]: value });
+  };
 
   //Obteniendo datos de un solo pedido
   const getPedido = async () => {
-
-    if(pedidoId === 0){
-      return
+    if (pedidoId === 0) {
+      return;
     }
 
-    const docSnap = await getOneRegister(collectionName,pedidoId);
+    const docSnap = await getOneRegister(collectionName, pedidoId);
 
     if (docSnap.exists()) {
       //Almacenando info de un solo registro
-      setEditOrDeletePedido(docSnap.data())
+      setEditOrDeletePedido(docSnap.data());
 
       //se alamacena la fecha con el formato valido
-      dayjs.extend(customParseFormat)
-      let yourDate = dayjs(docSnap.data().fecha, 'DD/MM/YYYY', 'es')
-      setValue(yourDate)
-
-      console.log(docSnap.data().fecha)
-      console.log(yourDate)
-
+      dayjs.extend(customParseFormat);
+      let yourDate = dayjs(docSnap.data().fecha, "DD/MM/YYYY", "es");
+      setValue(yourDate);
     } else {
       //mensaje de error al no encontrar
       console.log("No such document!");
     }
-  }
+  };
 
   //Funcion para obtener mas informacion de un solo pedido cuando cambie el id
-  useEffect(()=>{
+  useEffect(() => {
     getPedido();
-  },[pedidoId])
-
-
+  }, [pedidoId]);
 
   //Funcion para eliminar
-  async function eliminarPedido(){
-    const docSnap = await getOneRegister(collectionName,pedidoId);
+  async function eliminarPedido() {
+    const docSnap = await getOneRegister(collectionName, pedidoId);
 
     if (docSnap.exists()) {
       Swal.fire({
-        title:'Eliminar este pedido',
-        icon:'warning',
-        text:'¿Seguro que quieres eliminar este pedido?',
+        title: "Eliminar este pedido",
+        icon: "warning",
+        text: "¿Seguro que quieres eliminar este pedido?",
         iconColor: theme.palette.text.icon,
-        color:theme.palette.text.accent,
+        color: theme.palette.text.accent,
         background: theme.palette.background.paper,
         showCancelButton: true,
         confirmButtonColor: theme.palette.secondary.main,
         cancelButtonColor: theme.palette.background.background,
-        confirmButtonText: 'Sí, eliminarlo',
-        cancelButtonText: 'Cancelar',
+        confirmButtonText: "Sí, eliminarlo",
+        cancelButtonText: "Cancelar",
       }).then((result) => {
-        if(result.isConfirmed){
-          deleteRegister(collectionName,pedidoId);
-          handleClose()
+        if (result.isConfirmed) {
+          deleteRegister(collectionName, pedidoId);
+          handleClose();
           Swal.fire({
-            title:'Pedido eliminado',
-            icon:'success',
-            text:'El pedido fue eliminado',
+            title: "Pedido eliminado",
+            icon: "success",
+            text: "El pedido fue eliminado",
             timer: 2000,
             iconColor: theme.palette.text.icon,
-            color:theme.palette.text.accent,
+            color: theme.palette.text.accent,
             background: theme.palette.background.paper,
-          })
+          });
         }
       });
     } else {
       console.log("No such document!");
     }
   }
-
 
   //Funcion para editar
-  async function modificarPedido(e) {theme
+  async function modificarPedido(e) {
+    theme;
     e.preventDefault();
 
-    const docSnap = await getOneRegister(collectionName,pedidoId);
+    let arreglo = {
+      ...editOrDeletePedido,
+      estado: editOrDeletePedido.estado.toString(),
+    };
+
+    const docSnap = await getOneRegister(collectionName, pedidoId);
 
     if (docSnap.exists()) {
-
       Swal.fire({
-        title:'Guardar cambios',
-        icon:'info',
-        text:'¿Quieres guardar los cambios?',
+        title: "Guardar cambios",
+        icon: "info",
+        text: "¿Quieres guardar los cambios?",
         iconColor: theme.palette.text.icon,
-        color:theme.palette.text.accent,
+        color: theme.palette.text.accent,
         background: theme.palette.background.paper,
         showCancelButton: true,
         confirmButtonColor: theme.palette.secondary.main,
         cancelButtonColor: theme.palette.background.background,
-        confirmButtonText: 'Guardar',
-        cancelButtonText: 'Cancelar',
+        confirmButtonText: "Guardar",
+        cancelButtonText: "Cancelar",
       }).then((result) => {
-        if(result.isConfirmed){
-          updateRegister(collectionName,pedidoId, editOrDeletePedido);
-          handleClose()
+        if (result.isConfirmed) {
+          updateRegister(collectionName, pedidoId, arreglo);
+          handleClose();
           Swal.fire({
-            title:'Pedido actualizado',
-            icon:'success',
-            text:'El Pedido fue actualizado',
+            title: "Pedido actualizado",
+            icon: "success",
+            text: "El Pedido fue actualizado",
             timer: 2000,
             iconColor: theme.palette.text.icon,
-            color:theme.palette.text.accent,
+            color: theme.palette.text.accent,
             background: theme.palette.background.paper,
-          })
+          });
         }
       });
-
     } else {
       console.log("No such document!");
     }
-
   }
-
 
   return (
     <Grid
@@ -196,11 +199,11 @@ function EditOrDeletePedido({collectionName,pedidoId,setPedidoId, openEoD, setOp
       alignItems="flex-start"
     >
       <Modal
-          open={openEoD}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
+        open={openEoD}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
         <form onSubmit={modificarPedido} autoComplete="off">
           <Box sx={style}>
             <Typography align="center" variant="h3" component="h3">
@@ -228,7 +231,9 @@ function EditOrDeletePedido({collectionName,pedidoId,setPedidoId, openEoD, setOp
               </Grid>
               <Grid item md={4} xs={12}>
                 <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">Estado de entrega</InputLabel>
+                  <InputLabel id="demo-simple-select-label">
+                    Estado de entrega
+                  </InputLabel>
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
@@ -242,7 +247,7 @@ function EditOrDeletePedido({collectionName,pedidoId,setPedidoId, openEoD, setOp
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item md={12} xs={12}/>
+              <Grid item md={12} xs={12} />
               <Grid item md={4} xs={12}>
                 <TextField
                   disabled
@@ -268,27 +273,44 @@ function EditOrDeletePedido({collectionName,pedidoId,setPedidoId, openEoD, setOp
                     inputFormat="DD/MM/YYYY"
                     onChange={(newValue) => {
                       setValue(newValue);
-                      let newFecha = newValue.$D+'/'+(newValue.$M+1)+'/'+newValue.$y
-                      setEditOrDeletePedido({...editOrDeletePedido, 'fecha':newFecha})
+                      let newFecha =
+                        newValue.$D +
+                        "/" +
+                        (newValue.$M + 1) +
+                        "/" +
+                        newValue.$y;
+                      setEditOrDeletePedido({
+                        ...editOrDeletePedido,
+                        fecha: newFecha,
+                      });
                     }}
                     renderInput={(params) => <TextField {...params} />}
                   />
-
                 </LocalizationProvider>
               </Grid>
-              {Object.entries(editOrDeletePedido.items).length === 0 ?(
+              {Object.entries(editOrDeletePedido.items).length === 0 ? (
                 <></>
-              ):(
+              ) : (
                 <Grid item md={8} xs={12}>
-                  <Grid container spacing={2} sx={{justifyContent:"center"}}>
-                    {editOrDeletePedido.items.map((product)=>(
+                  <Grid container spacing={2} sx={{ justifyContent: "center" }}>
+                    {editOrDeletePedido.items.map((product) => (
                       <Grid item key={product.id} mt={2} md={4} xs={12}>
-                        <Paper elevation={4} p={1} sx={{borderRadius:'20px'}}>
-                          <Typography p={2} align="center" variant="h4">{product.nombre}</Typography>
-                          <Divider mb={4}/>
+                        <Paper
+                          elevation={4}
+                          p={1}
+                          sx={{ borderRadius: "20px" }}
+                        >
+                          <Typography p={2} align="center" variant="h4">
+                            {product.nombre}
+                          </Typography>
+                          <Divider mb={4} />
                           <Box p={2}>
-                            <Typography align="left" variant="h6">Cantidad: {product.cantidad}</Typography>
-                            <Typography align="left" variant="h5">Precio: {product.precio}</Typography>
+                            <Typography align="left" variant="h6">
+                              Cantidad: {product.cantidad}
+                            </Typography>
+                            <Typography align="left" variant="h5">
+                              Precio: {product.precio}
+                            </Typography>
                           </Box>
                         </Paper>
                       </Grid>
@@ -298,10 +320,14 @@ function EditOrDeletePedido({collectionName,pedidoId,setPedidoId, openEoD, setOp
               )}
               <Grid item md={12} xs={12}></Grid>
               <Grid item align="left" md={4} xs={6}>
-                <Button onClick={eliminarPedido} variant="outlined">Eliminar</Button>
+                <Button onClick={eliminarPedido} variant="outlined">
+                  Eliminar
+                </Button>
               </Grid>
               <Grid item align="right" md={4} xs={6}>
-                <Button type="submit" variant="contained">Guardar</Button>
+                <Button type="submit" variant="contained">
+                  Guardar
+                </Button>
               </Grid>
             </Grid>
           </Box>
